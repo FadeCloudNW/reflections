@@ -128,41 +128,6 @@ public class VfsTest {
     public void vfsFromDir() {
         testVfsDir(getSomeDirectory());
     }
-    
-    @Test
-    public void vfsFromDirWithJarInName() throws MalformedURLException {
-        String tmpFolder = System.getProperty("java.io.tmpdir");
-		tmpFolder = tmpFolder.endsWith(File.separator) ? tmpFolder : tmpFolder + File.separator;
-        String dirWithJarInName = tmpFolder + "tony.jarvis";
-        File newDir = new File(dirWithJarInName);
-        newDir.mkdir();
-
-        try {
-            Vfs.Dir dir = Vfs.fromURL(new URL(format("file:{0}", dirWithJarInName)));
-
-            assertEquals(dirWithJarInName, dir.getPath());
-            assertEquals(SystemDir.class, dir.getClass());
-        } finally {
-            newDir.delete();
-        }
-    }
-    
-    @Test
-    public void vfsFromDirWithinAJarUrl() throws MalformedURLException {
-    	URL directoryInJarUrl = ClasspathHelper.forClass(String.class);
-        assertTrue(directoryInJarUrl.toString().startsWith("jar:file:"));
-        assertTrue(directoryInJarUrl.toString().contains(".jar!"));
-        
-        String directoryInJarPath = directoryInJarUrl.toExternalForm().replaceFirst("jar:", "");
-        int start = directoryInJarPath.indexOf(":") + 1;
-		int end = directoryInJarPath.indexOf(".jar!") + 4;
-		String expectedJarFile = directoryInJarPath.substring(start, end);
-        
-        Vfs.Dir dir = Vfs.fromURL(new URL(directoryInJarPath));
-
-        assertEquals(ZipDir.class, dir.getClass());
-        assertEquals(expectedJarFile, dir.getPath());
-    }
 
     @Test
     public void vfsFromJarFileUrl() throws MalformedURLException {
